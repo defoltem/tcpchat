@@ -1,4 +1,6 @@
 #include <iostream>
+#include <vector>
+#include <thread>
 #include <string>
 #include <stdio.h>
 #include <unistd.h>
@@ -8,15 +10,17 @@
 #include <netinet/in.h>
 
 class server{
+    const std::string alp = "qwertyuiopasdfghjklzxcvbnm1234567890QWERTYUIOPASDFGHJKLZXCVBNM";
     int serverf, sock, reader;
     struct sockaddr_in address;
+    std::string name = "";
+    std::string respons = "";
     int opt = 1;
     int laddr = sizeof(address);
-    char buff[1024] = {0};
-   // std::string ip = "";
     int port = 1337;
-    //char *hello = "Hello there";
 public:
-    //server(std::string ip, int port);
+    //server(int port);
+    void discuss(int sock);
+    void buff_clear(std::vector<char> &b);
     void init_ser();
 };
