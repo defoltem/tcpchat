@@ -1,5 +1,7 @@
 #include <iostream>
 #include <string>
+#include <thread>
+#include <functional>
 #include <stdio.h>
 #include <vector>
 #include <sys/socket.h>
@@ -13,8 +15,8 @@ class client{
     std::string ip = "127.0.0.1";
     int port = 1337;
     std::string messg = "";
-    //char buff[1024] = {0};
 public:
     void buff_clear(std::vector<char> &b);
     void con_to_serv();
+    void waiting_and_display_msg(int sock, int reader, std::vector<char> &b);
 };

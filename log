@@ -1,0 +1,1 @@
+g++ -Wall -o cli client.cpp headers/clie.cpp -g -pthread
