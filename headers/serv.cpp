@@ -1,13 +1,22 @@
 #include "serv.h"
+// TASKS: REMOVE HARDCODE, FIX BUGS 
 
-void server::discuss(int sock){
+void server::discuss(){
+    int sock, reader;
+    int id = id_getter;
+    std::string name = "";
+    std::string respons = "";
+    if ((sock = accept(serverf, (struct sockaddr *)&address, (socklen_t*)&laddr)) < 0){
+        std::cout << "failed to create a new connection\n";
+        exit(0);
+    }
+    clients.at(id) = sock;
     std::vector<char> buff(1024);
     reader = read(sock, buff.data(), 1024); // confirming name
     for(const char c:buff){
         //std::cout << c;
         name += c;
     }
-  //  send(sock, name.c_str(), name.length(), 0);
     buff_clear(buff);
     for (size_t i = 0; i < name.length(); i++){
         if (alp.find(name.at(i)) == std::string::npos){
@@ -15,6 +24,7 @@ void server::discuss(int sock){
             break;
         }
     }
+    std::cout << name << " has connected\n";
     while(1){
     reader = read(sock, buff.data(), 1024);
     //std::cout << name << ": ";
@@ -24,7 +34,9 @@ void server::discuss(int sock){
     }
     respons =  name + ": " + respons;
     std::cout << respons <<'\n';
-    send(sock, respons.c_str(), respons.length(), 0);
+    for (size_t j = 0; j < 5; j++) {
+        send(clients.at(j), respons.c_str(), respons.length(), 0);
+    }
     respons = "";
     buff_clear(buff);
     }
@@ -57,9 +69,23 @@ void server::init_ser(){
         std::cout << "failed to listen\n";
         exit(0);
     }
-    if ((sock = accept(serverf, (struct sockaddr *)&address, (socklen_t*)&laddr)) < 0){
-        std::cout << "failed to create a new connection\n";
-        exit(0);
-    }
-    discuss(sock);
+    //while(1){
+        /*if ((sock = accept(serverf, (struct sockaddr *)&address, (socklen_t*)&laddr)) < 0){
+            std::cout << "failed to create a new connection\n";
+            exit(0);
+        }*/
+        for(size_t i = 0; i < 5; i++){
+            //if (clients.at(i) == 0) {
+                //clients.at(i) = sock;
+                std::thread sock_thread(&server::discuss, this); // why the fuck it don't get any varible?
+                sock_thread.detach();
+                id_getter++;
+                //clients_threads.at(i) = std::move(sock_thread);
+                //clients_threads.at(i).detach();
+                //discuss();
+              //  break;
+            //}
+        }
+        while(1) {}; 
+    //}
 }

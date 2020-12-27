@@ -2,6 +2,7 @@
 #include <vector>
 #include <thread>
 #include <string>
+#include <functional>
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -11,16 +12,19 @@
 
 class server{
     const std::string alp = "qwertyuiopasdfghjklzxcvbnm1234567890QWERTYUIOPASDFGHJKLZXCVBNM";
-    int serverf, sock, reader;
+    int serverf;
+    int id_getter = 0;
     struct sockaddr_in address;
-    std::string name = "";
-    std::string respons = "";
+    //std::string name = "";
+    //std::string respons = "";
     int opt = 1;
     int laddr = sizeof(address);
     int port = 1337;
+    std::vector<int> clients{std::vector<int>(5,0)};
+    //std::vector<std::thread> clients_threads{std::vector<std::thread>(5)};
 public:
     //server(int port);
-    void discuss(int sock);
+    void discuss();
     void buff_clear(std::vector<char> &b);
     void init_ser();
 };
