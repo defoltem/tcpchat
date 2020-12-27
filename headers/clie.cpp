@@ -49,7 +49,6 @@ void client::con_to_serv(){
     }catch(const std::system_error& e) {
         std::cout << "code: " << e.code() << " meaning " << e.what() << '\n';
     }
-    //std::cout << name << ": " << messg;    
     messg = "";
     std::cout << '\n';
     }

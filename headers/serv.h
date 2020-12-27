@@ -21,7 +21,6 @@ class server{
     int laddr = sizeof(address);
     int port = 1337;
     std::vector<int> clients{std::vector<int>(5,0)};
-    //std::vector<std::thread> clients_threads{std::vector<std::thread>(5)};
 public:
     //server(int port);
     void discuss();

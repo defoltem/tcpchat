@@ -14,7 +14,6 @@ void server::discuss(){
     std::vector<char> buff(1024);
     reader = read(sock, buff.data(), 1024); // confirming name
     for(const char c:buff){
-        //std::cout << c;
         name += c;
     }
     buff_clear(buff);
@@ -27,9 +26,7 @@ void server::discuss(){
     std::cout << name << " has connected\n";
     while(1){
     reader = read(sock, buff.data(), 1024);
-    //std::cout << name << ": ";
     for(const char c:buff){
-       // std::cout << c;
         respons += c;
     }
     respons =  name + ": " + respons;
@@ -69,23 +66,10 @@ void server::init_ser(){
         std::cout << "failed to listen\n";
         exit(0);
     }
-    //while(1){
-        /*if ((sock = accept(serverf, (struct sockaddr *)&address, (socklen_t*)&laddr)) < 0){
-            std::cout << "failed to create a new connection\n";
-            exit(0);
-        }*/
-        for(size_t i = 0; i < 5; i++){
-            //if (clients.at(i) == 0) {
-                //clients.at(i) = sock;
-                std::thread sock_thread(&server::discuss, this); // why the fuck it don't get any varible?
-                sock_thread.detach();
-                id_getter++;
-                //clients_threads.at(i) = std::move(sock_thread);
-                //clients_threads.at(i).detach();
-                //discuss();
-              //  break;
-            //}
-        }
-        while(1) {}; 
-    //}
+    for(size_t i = 0; i < 5; i++){
+        std::thread sock_thread(&server::discuss, this); // why the fuck it don't get any varible?
+        sock_thread.detach();
+        id_getter++;
+    }
+    while(1) {}; 
 }
