@@ -1,41 +1,48 @@
 #include "serv.h"
 // TASKS: REMOVE HARDCODE, FIX BUGS 
+server::server(int port) : port(port) {}
 
 void server::discuss(){
     int sock, reader;
     int id = id_getter;
     std::string name = "";
     std::string respons = "";
-    if ((sock = accept(serverf, (struct sockaddr *)&address, (socklen_t*)&laddr)) < 0){
-        std::cout << "failed to create a new connection\n";
-        exit(0);
-    }
-    clients.at(id) = sock;
-    std::vector<char> buff(1024);
-    reader = read(sock, buff.data(), 1024); // confirming name
-    for(const char c:buff){
-        name += c;
-    }
-    buff_clear(buff);
-    for (size_t i = 0; i < name.length(); i++){
-        if (alp.find(name.at(i)) == std::string::npos){
-            name = name.substr(0, i);
+    while(1){
+        if ((sock = accept(serverf, (struct sockaddr *)&address, (socklen_t*)&laddr)) < 0){
+            std::cout << "failed to create a new connection\n";
+            exit(0);
+        }
+        clients.at(id) = sock;
+        std::vector<char> buff(1024);
+        reader = read(sock, buff.data(), 1024); // confirming name
+        for(const char c:buff){
+            name += c;
+        }
+        buff_clear(buff);
+        for (size_t i = 0; i < name.length(); i++){ // cut the name
+            if (alp.find(name.at(i)) == std::string::npos){
+                name = name.substr(0, i);
+                break;
+            }
+        }
+        std::cout << name << " has connected\n";
+        while(1){
+        reader = read(sock, buff.data(), 1024);
+        for(const char c:buff){
+            respons += c;
+        }
+        if (respons.find("/quit") != std::string::npos){
+            shutdown(clients.at(id), 2);
             break;
         }
-    }
-    std::cout << name << " has connected\n";
-    while(1){
-    reader = read(sock, buff.data(), 1024);
-    for(const char c:buff){
-        respons += c;
-    }
-    respons =  name + ": " + respons;
-    std::cout << respons <<'\n';
-    for (size_t j = 0; j < 5; j++) {
-        send(clients.at(j), respons.c_str(), respons.length(), 0);
-    }
-    respons = "";
-    buff_clear(buff);
+        respons =  name + ": " + respons;
+        std::cout << respons <<'\n';
+        for (size_t j = 0; j < 5; j++) {
+            send(clients.at(j), respons.c_str(), respons.length(), 0);
+        }
+        respons = "";
+        buff_clear(buff);
+        }
     }
 }
 

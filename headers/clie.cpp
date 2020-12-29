@@ -1,4 +1,6 @@
 #include "clie.h"
+// TASK: CHANGE AN INTERFACE TO NCURSES
+client::client(std::string ip, int port) : ip(ip), port(port) {}
 
 void client::buff_clear(std::vector<char> &b){
         for(size_t i = 0; i < b.size(); i++){
@@ -7,19 +9,15 @@ void client::buff_clear(std::vector<char> &b){
     }
 }
 
-void wwaiting_and_display_msg(int sock, int reader,std::vector<char> &b){
+void client::waiting_and_display_msg(){
     while(1){
-        reader = read(sock, b.data(), 1024);
-        std::cout << '\n';
-        for(const char c:b){
+        reader = read(sock, buff.data(), 1024);
+        //std::cout << '\n';
+        for(const char c:buff){
             std::cout << c;
         }
         std::cout << '\n';  
     }
-}
-
-void foo(std::string tt){
-    std::cout << tt << '\n';
 }
 
 void client::con_to_serv(){
@@ -38,8 +36,8 @@ void client::con_to_serv(){
     std::cout << "write your name: ";
     getline(std::cin, name);
     send(sock, name.c_str(), name.length(), 0);
-    std::vector<char> buff(1024);
-    std::thread waitndis(std::bind(wwaiting_and_display_msg, sock, reader, buff));
+    //std::vector<char> buff(1024);
+    std::thread waitndis(std::bind(&client::waiting_and_display_msg, this));
     waitndis.detach();
     while(1){
     std::cout << ">";

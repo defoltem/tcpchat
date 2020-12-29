@@ -1,6 +1,9 @@
 #include "headers/serv.h"
 int main(){
-    server sr; // localhost doesn't send
+    int port = 0;
+    std::cout << "write a port ? ";
+    std::cin>>port;
+    server sr(port);
     sr.init_ser();
     return 0;
 }
